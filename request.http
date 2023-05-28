@@ -1,0 +1,31 @@
+### Sign up a new user
+POST http://localhost:3000/auth/signup
+content-type: application/json
+
+{
+    "email": "test@gmail.com",
+    "password": "1234"
+}
+
+### Sign in a user
+POST http://localhost:3000/auth/signin
+content-type: application/json
+
+{
+    "email": "test@gmail.com",
+    "password": "12345"
+}
+
+### Create a report
+POST http://localhost:3000/reports
+content-type: application/json
+
+{
+    "make": "toyota",
+    "model": "toyota",
+    "year": 2019,
+    "lng": 1,
+    "lat": 2,
+    "mileage": 46546,
+    "price": 46546
+}

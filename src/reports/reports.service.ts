@@ -29,8 +29,8 @@ export class ReportsService {
     return this.repo
       .createQueryBuilder()
       .select('AVG(price)', 'price')
-      .where('make = :make', { make })
-      .andWhere('model = :model', { model })
+      .where('LOWER(make) = LOWER(:make)', { make }) // We use it for case sensitive
+      .andWhere('LOWER(model) = LOWER(:model)', { model })
       .andWhere('year - :year BETWEEN -3 AND 3', { year })
       .andWhere('lng - :lng BETWEEN -5 AND 5', { lng })
       .andWhere('lat - :lat BETWEEN -5 AND 5', { lat })
