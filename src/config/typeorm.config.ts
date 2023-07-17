@@ -1,25 +1,49 @@
-import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { TypeOrmModuleOptions, TypeOrmOptionsFactory } from '@nestjs/typeorm';
+import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class TypeOrmConfigService implements TypeOrmOptionsFactory {
   constructor(private configService: ConfigService) {}
 
   createTypeOrmOptions(): TypeOrmModuleOptions {
-    const isTestEnvironment = process.env.NODE_ENV === 'test';
-    const isDevEnvironment = process.env.NODE_ENV === 'development';
-    const isProdEnvironment = process.env.NODE_ENV === 'production';
-
-    return {
-      type: 'sqlite', // Change this to 'postgres' or your desired production database type
-      synchronize: isTestEnvironment || isDevEnvironment, // Synchronize in test and development, but not in production
-      database: this.configService.get<string>('DATABASE_NAME'),
-      autoLoadEntities: true,
-      migrationsRun: isProdEnvironment, // Set to true in production mode
-      keepConnectionAlive: isTestEnvironment,
-      entities: ['**/*.entity.ts'],
+    const dbConfig = {
+      synchronize: false,
       migrations: [__dirname + '/migrations/*.ts'],
+      migrationsRun: true,
+      autoLoadEntities: true,
     };
+
+    switch (process.env.NODE_ENV) {
+      case 'development':
+        Object.assign(dbConfig, {
+          type: 'sqlite',
+          database: 'db.sqlite',
+          entities: ['**/*.entity.js'],
+        });
+        break;
+      case 'test':
+        Object.assign(dbConfig, {
+          type: 'sqlite',
+          database: 'test.sqlite',
+          entities: ['**/*.entity.ts'],
+        });
+        break;
+      case 'production':
+        Object.assign(dbConfig, {
+          type: 'postgres',
+          host: 'localhost',
+          port: 5432,
+          username: 'postgres',
+          password: 'password123',
+          database: 'mydatabase',
+          entities: ['**/*.entity.js'],
+        });
+        break;
+      default:
+        throw new Error('unknown environment');
+    }
+
+    return dbConfig;
   }
 }
