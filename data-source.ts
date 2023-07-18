@@ -1,14 +1,12 @@
 import { DataSource, DataSourceOptions } from 'typeorm';
 
 
-const dbConfig = {
-  synchronize: false,
-  migrations: [__dirname + '/migrations/*.ts'],
-};
+const dbConfig = {};
 
 switch (process.env.NODE_ENV) {
   case 'development':
     Object.assign(dbConfig, {
+      synchronize: true,
       type: 'sqlite',
       database: 'db.sqlite',
       entities: ['**/*.entity.js'],
@@ -16,6 +14,7 @@ switch (process.env.NODE_ENV) {
     break;
   case 'test':
     Object.assign(dbConfig, {
+      synchronize: true,
       type: 'sqlite',
       database: 'test.sqlite',
       entities: ['**/*.entity.ts'],
@@ -30,6 +29,8 @@ switch (process.env.NODE_ENV) {
       password: 'password123',
       database: 'mydatabase',
       entities: ['**/*.entity.js'],
+      synchronize: false,
+      migrations: [__dirname + '/migrations/*.js'],
     });
     break;
   default:

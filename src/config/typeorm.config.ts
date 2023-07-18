@@ -8,8 +8,6 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
 
   createTypeOrmOptions(): TypeOrmModuleOptions {
     const dbConfig = {
-      synchronize: false,
-      migrations: [__dirname + '/migrations/*.ts'],
       migrationsRun: true,
       autoLoadEntities: true,
     };
@@ -17,6 +15,7 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
     switch (process.env.NODE_ENV) {
       case 'development':
         Object.assign(dbConfig, {
+          synchronize: true,
           type: 'sqlite',
           database: 'db.sqlite',
           entities: ['**/*.entity.js'],
@@ -24,6 +23,7 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
         break;
       case 'test':
         Object.assign(dbConfig, {
+          synchronize: true,
           type: 'sqlite',
           database: 'test.sqlite',
           entities: ['**/*.entity.ts'],
@@ -38,6 +38,8 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
           password: 'password123',
           database: 'mydatabase',
           entities: ['**/*.entity.js'],
+          synchronize: false,
+          migrations: [__dirname + '/migrations/*.js'],
         });
         break;
       default:
