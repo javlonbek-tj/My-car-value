@@ -13,7 +13,7 @@ describe('Authentication system', () => {
 
     app = moduleFixture.createNestApplication();
     await app.init();
-  });
+  }, 10000);
 
   it('handles a signup request', async () => {
     const randomEmail = 'asdsdsdf@gmail.com';

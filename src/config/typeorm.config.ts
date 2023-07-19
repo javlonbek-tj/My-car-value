@@ -7,10 +7,7 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
   constructor(private configService: ConfigService) {}
 
   createTypeOrmOptions(): TypeOrmModuleOptions {
-    const dbConfig = {
-      migrationsRun: true,
-      autoLoadEntities: true,
-    };
+    const dbConfig = {};
 
     switch (process.env.NODE_ENV) {
       case 'development':
@@ -31,15 +28,17 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
         break;
       case 'production':
         Object.assign(dbConfig, {
-          type: 'postgres',
+           type: 'postgres',
           host: 'localhost',
           port: 5432,
           username: 'postgres',
-          password: 'password123',
-          database: 'mydatabase',
+          password: 'postgresqlabc$',
+          database: 'postgres',
           entities: ['**/*.entity.js'],
+          migrationsRun: true,
+          autoLoadEntities: true,
           synchronize: false,
-          migrations: [__dirname + '/migrations/*.js'],
+          migrations: [__dirname + '/migrations/*.ts'],
         });
         break;
       default:
