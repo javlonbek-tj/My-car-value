@@ -1,5 +1,5 @@
 ### Sign up a new user
-POST http://localhost:3000/auth/signup
+POST http://localhost:3000/users/signup
 content-type: application/json
 
 {
@@ -8,7 +8,7 @@ content-type: application/json
 }
 
 ### Sign in a user
-POST http://localhost:3000/auth/signin
+POST http://localhost:3000/users/signin
 content-type: application/json
 
 {
@@ -23,9 +23,38 @@ content-type: application/json
 {
     "make": "toyota",
     "model": "toyota",
-    "year": 2019,
-    "lng": 1,
-    "lat": 2,
-    "mileage": 46546,
-    "price": 46546
+    "year": 2018,
+    "lng": 2,
+    "lat": 4,
+    "mileage": 42000,
+    "price": 30000
+}
+
+### Get reports
+GET http://localhost:3000/reports
+
+
+### Delete reports
+DELETE http://localhost:3000/reports/2
+
+
+### Get estimate price
+GET http://localhost:3000/reports/estimatePrice?make=toyota&model=toyota&year=2018&mileage=46500&lng=1&lat=2
+
+
+### Approve report
+PATCH http://localhost:3000/reports/approve/4
+content-type: application/json
+
+{
+    "approved": true
+}
+
+
+### Update report
+PATCH http://localhost:3000/reports/14
+content-type: application/json
+
+{
+    "year": 2020
 }

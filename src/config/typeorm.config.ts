@@ -28,7 +28,7 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
         break;
       case 'production':
         Object.assign(dbConfig, {
-           type: 'postgres',
+          type: 'postgres',
           host: 'localhost',
           port: 5432,
           username: 'postgres',

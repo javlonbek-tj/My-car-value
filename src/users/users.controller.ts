@@ -20,7 +20,7 @@ import { Session, UseGuards } from '@nestjs/common/decorators';
 import { User } from './user.entity';
 import { AuthGuard } from '../guards/auth.guard';
 
-@Controller('auth')
+@Controller('users')
 @Serialize(UserDto)
 export class UsersController {
   constructor(

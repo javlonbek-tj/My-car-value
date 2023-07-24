@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../users/user.entity';
 import { Between, Repository } from 'typeorm';
@@ -12,8 +16,12 @@ export class ReportsService {
 
   create(reportDto: CreateReportDto, user: User) {
     const report = this.repo.create(reportDto);
-    report.user = user;
+    report.userId = user.id;
     return this.repo.save(report);
+  }
+
+  async findAllReports() {
+    return this.repo.find();
   }
 
   async changeApproval(id: string, approved: boolean) {
@@ -22,6 +30,22 @@ export class ReportsService {
       throw new NotFoundException('Report not found');
     }
     report.approved = approved;
+    return this.repo.save(report);
+  }
+
+  async updateReport(id: string, user: User, attrs: Partial<Report>) {
+    const report = await this.repo.findOne({
+      where: { id: parseInt(id) },
+    });
+    if (!report) {
+      throw new NotFoundException('Report not found');
+    }
+    if (report.userId !== user.id) {
+      throw new UnauthorizedException(
+        'You are not authorized to update this report',
+      );
+    }
+    Object.assign(report, attrs);
     return this.repo.save(report);
   }
 
@@ -39,5 +63,13 @@ export class ReportsService {
       .setParameters({ mileage })
       .limit(3)
       .getRawOne();
+  }
+
+  async deleteReport(id: number) {
+    const report = await this.repo.findOneBy({ id });
+    if (!report) {
+      throw new NotFoundException('Report not found');
+    }
+    return this.repo.remove(report);
   }
 }
