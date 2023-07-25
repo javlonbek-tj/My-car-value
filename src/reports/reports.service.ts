@@ -16,7 +16,7 @@ export class ReportsService {
 
   create(reportDto: CreateReportDto, user: User) {
     const report = this.repo.create(reportDto);
-    report.userId = user.id;
+    report.user = user;
     return this.repo.save(report);
   }
 
@@ -24,8 +24,8 @@ export class ReportsService {
     return this.repo.find();
   }
 
-  async changeApproval(id: string, approved: boolean) {
-    const report = await this.repo.findOne({ where: { id: parseInt(id) } });
+  async changeApproval(id: number, approved: boolean) {
+    const report = await this.repo.findOneBy({id});
     if (!report) {
       throw new NotFoundException('Report not found');
     }
@@ -33,10 +33,8 @@ export class ReportsService {
     return this.repo.save(report);
   }
 
-  async updateReport(id: string, user: User, attrs: Partial<Report>) {
-    const report = await this.repo.findOne({
-      where: { id: parseInt(id) },
-    });
+  async updateReport(id: number, user: User, attrs: Partial<Report>) {
+    const report = await this.repo.findOneBy({id});
     if (!report) {
       throw new NotFoundException('Report not found');
     }

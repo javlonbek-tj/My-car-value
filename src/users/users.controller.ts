@@ -12,6 +12,7 @@ import {
   Param,
   Delete,
   NotFoundException,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { CreateUserDto } from './dtos/create.user.dto';
 import { UpdateUserDto } from './dtos/update.user.dto';
@@ -19,6 +20,8 @@ import { UsersService } from './users.service';
 import { Session, UseGuards } from '@nestjs/common/decorators';
 import { User } from './user.entity';
 import { AuthGuard } from '../guards/auth.guard';
+import { ApiBadRequestResponse, ApiCreatedResponse, ApiNotFoundResponse, ApiOkResponse } from '@nestjs/swagger';
+
 
 @Controller('users')
 @Serialize(UserDto)
@@ -27,6 +30,9 @@ export class UsersController {
     private usersService: UsersService,
     private authService: Authservice,
   ) {}
+
+  @ApiCreatedResponse({type: UserDto})
+  @ApiBadRequestResponse()
   @Post('/signup')
   async createUser(@Body() body: CreateUserDto, @Session() session: any) {
     const user = await this.authService.signup(body.email, body.password);
@@ -34,6 +40,8 @@ export class UsersController {
     return user;
   }
 
+  @ApiOkResponse({type: UserDto})
+  @ApiNotFoundResponse()
   @Post('/signin')
   async signin(@Body() body: CreateUserDto, @Session() session: any) {
     const user = await this.authService.signin(body.email, body.password);
@@ -51,27 +59,31 @@ export class UsersController {
   signOut(@Session() session: any) {
     session.userId = null;
   }
+
+  @ApiOkResponse({type: UserDto})
+  @ApiNotFoundResponse()
   @Get('/:id')
-  async findUser(@Param('id') id: string) {
-    const user = await this.usersService.findOne(parseInt(id));
+  async findUser(@Param('id', ParseIntPipe) id: number) {
+    const user = await this.usersService.findOne(id);
     if (!user) {
       throw new NotFoundException('User not found');
     }
     return user;
   }
 
+  @ApiOkResponse({type: UserDto, isArray: true})
   @Get()
   findAllUsers(@Query('email') email: string) {
     return this.usersService.find(email);
   }
 
   @Delete('/:id')
-  removeUser(@Param('id') id: string) {
-    return this.usersService.remove(parseInt(id));
+  removeUser(@Param('id', ParseIntPipe) id: number) {
+    return this.usersService.remove(id);
   }
 
   @Patch('/:id')
-  updateUser(@Param('id') id: string, @Body() body: UpdateUserDto) {
-    return this.usersService.update(parseInt(id), body);
+  updateUser(@Param('id', ParseIntPipe) id: number, @Body() body: UpdateUserDto) {
+    return this.usersService.update(id, body);
   }
 }

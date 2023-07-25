@@ -21,8 +21,8 @@ POST http://localhost:3000/reports
 content-type: application/json
 
 {
-    "make": "toyota",
-    "model": "toyota",
+    "make": "Chevrolet",
+    "model": "Gentra",
     "year": 2018,
     "lng": 2,
     "lat": 4,
