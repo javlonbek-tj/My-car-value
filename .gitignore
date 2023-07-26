@@ -1,8 +1,10 @@
-.env*
-.env.production
+
 # compiled output
 /dist
 /node_modules
+.env*
+/data-source
+
 
 # Logs
 logs

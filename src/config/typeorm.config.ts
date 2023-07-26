@@ -29,11 +29,11 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
       case 'production':
         Object.assign(dbConfig, {
           type: 'postgres',
-          host: 'localhost',
-          port: 5432,
-          username: 'postgres',
-          password: 'postgresqlabc$',
-          database: 'postgres',
+          host: this.configService.get<string>('DATABASE_HOST'),
+          port: this.configService.get<number>('DATABASE_PORT'),
+          username: this.configService.get<string>('DATABASE_USERNAME'),
+          password: this.configService.get<string>('DATABASE_PASSWORD'),
+          database: this.configService.get<string>('DATABASE_NAME'),
           entities: ['**/*.entity.js'],
           migrationsRun: true,
           autoLoadEntities: true,
