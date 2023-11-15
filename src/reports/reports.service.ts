@@ -25,7 +25,7 @@ export class ReportsService {
   }
 
   async changeApproval(id: number, approved: boolean) {
-    const report = await this.repo.findOneBy({id});
+    const report = await this.repo.findOneBy({ id });
     if (!report) {
       throw new NotFoundException('Report not found');
     }
@@ -34,7 +34,7 @@ export class ReportsService {
   }
 
   async updateReport(id: number, user: User, attrs: Partial<Report>) {
-    const report = await this.repo.findOneBy({id});
+    const report = await this.repo.findOneBy({ id });
     if (!report) {
       throw new NotFoundException('Report not found');
     }
